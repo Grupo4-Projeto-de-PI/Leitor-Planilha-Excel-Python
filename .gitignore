@@ -1,0 +1,12 @@
+# Ignorar arquivos Python compilados
+__pycache__/
+
+# Ignorar arquivos de ambiente
+.env
+
+# Ignorar pastas de build
+build/
+dist/
+
+# Ignorar arquivos de sistema do Windows
+Thumbs.db
