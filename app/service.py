@@ -1,7 +1,6 @@
 import requests
-
-def get_greeting(name: str) -> str:
-    return f"Olá, {name}! Seja bem-vindo à nossa API."
+from fastapi import UploadFile
+import pandas as pd
 
 def testeChamda():
     response = requests.get("http://localhost:8080/usuario")
@@ -9,3 +8,8 @@ def testeChamda():
         return response.json()
     else:
         return {"error": "Failed to fetch data"}
+    
+def extrairDados(arquivo: UploadFile) -> str:
+    return {
+        "filename": arquivo.filename,
+    }

@@ -1,15 +1,10 @@
-from fastapi import APIRouter
-from app.service import get_greeting
+from fastapi import APIRouter, File, UploadFile
+from app.service import extrairDados
 
 router = APIRouter()
 
-@router.get("/greet/{name}")
-def greet(name: str):
-    message = get_greeting(name)
-    return {"message": message}
-
-@router.get("/test")
-def test():
-    from app.service import testeChamda
-    data = testeChamda()
-    return {"dados": data}
+@router.post("/extract/")
+def extract(arquivo: UploadFile = File(...)):
+    from app.service import extrairDados
+    data = extrairDados(arquivo)
+    return {"Arquivo": data}

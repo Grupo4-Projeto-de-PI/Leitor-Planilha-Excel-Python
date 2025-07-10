@@ -2,3 +2,4 @@ request
 pandas
 fastapi
 uvicorn
+python-multipart
