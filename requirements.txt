@@ -1,5 +1,8 @@
-request
+requests
 pandas
+openpyxl
 fastapi
 uvicorn
 python-multipart
+pydantic
+typing

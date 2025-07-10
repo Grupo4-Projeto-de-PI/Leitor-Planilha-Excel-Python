@@ -7,4 +7,12 @@ router = APIRouter()
 def extract(arquivo: UploadFile = File(...)):
     from app.service import extrairDados
     data = extrairDados(arquivo)
+    print(data)
     return {"Arquivo": data}
+
+@router.get("/test/")
+def test():
+    from app.service import testeChamda
+    data = testeChamda()
+    print(data)
+    return {"Teste": data}
