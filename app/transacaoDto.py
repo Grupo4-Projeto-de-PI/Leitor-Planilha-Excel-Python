@@ -2,11 +2,11 @@ from pydantic import BaseModel
 from typing import Optional, List
 
 class TransacaoDto(BaseModel):
-     fkProduto: str
-     categoria: str = "granel"
-     peso: str
-     valorTotal: str
-     tipoOperacao: str = "entrada"
+     fkProduto: int
+     categoria: int
+     peso: float
+     valorTotal: float
+     tipoOperacao: int
      fkParceiroComercial: int = 0
      fkUsuario: int = 0
      data: str
