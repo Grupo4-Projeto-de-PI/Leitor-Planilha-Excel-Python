@@ -2,7 +2,7 @@ import requests
 from fastapi import UploadFile
 import pandas as pd
 import io
-from app.transacaoDto import TransacaoDto
+from app.dto.transacaoDto import TransacaoDto
 
 def postarDados(transacaoDto: TransacaoDto) -> str:
     response = requests.post(
@@ -11,6 +11,15 @@ def postarDados(transacaoDto: TransacaoDto) -> str:
     
     if response.status_code == 200:
         return response.json()
+    else:
+        return {"error": "Failed to fetch data"}
+    
+def buscarProdutos() -> str:
+    response = requests.get("http://localhost:8080/produtos")
+    
+    if response.status_code == 200:
+        produtos = response.json()
+        print(produtos)
     else:
         return {"error": "Failed to fetch data"}
     
@@ -28,8 +37,10 @@ def extrairDados(arquivo: UploadFile) -> str:
         df = df.iloc[1:32, 0:4]
         print(df)
         
-        # Não sei o que essa linha faz, mas estava no código original
+        # Essa linha remove linhas onde todos os valores da linha são NaN
         df = df.dropna(how='all').reset_index(drop=True)
+        
+        #Mudar lógica, talvez ficar postando dentro do banco a cada vez que criar um dto
         transacoes = []
         
         # Reseta o ponteiro do arquivo para reutilização se necessário
@@ -52,6 +63,7 @@ def extrairDados(arquivo: UploadFile) -> str:
             )
             transacoes.append(dto)
             
+        #Postando a primeira transação como exemplo, mas fazer outro esquema para postar uma de cada vez
         print(transacoes[1])
         postarDados(transacoes[1])
         
