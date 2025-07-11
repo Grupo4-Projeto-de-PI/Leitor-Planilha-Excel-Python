@@ -3,31 +3,7 @@ from fastapi import UploadFile
 import pandas as pd
 import io
 from app.dto.transacaoDto import TransacaoDto
-from app.dto.produtoDto import produtoDto
-
-def postarDados(transacaoDto: TransacaoDto) -> str:
-    response = requests.post(
-        "http://localhost:8080/transacoes",
-        json=transacaoDto.model_dump())
-    
-    if response.status_code == 200:
-        return response.json()
-    else:
-        return {"error": "Falha ao postar as transações"}
-    
-def buscarProdutos() -> str:
-    response = requests.get("http://localhost:8080/produto")
-    
-    if response.status_code == 200:
-        resposta = response.json()
-        produtosName = []    
-        
-        for produto in resposta: 
-            produtosName.append({"id": produto['id'], "name": produto['nome']})
-            
-        return produtosName
-    else:
-        return {"error": "Falha ao buscar produtos"}
+from app.helper.transacaoHelper import postarDados
     
 def extrairDados(arquivo: UploadFile) -> str:
     try:
