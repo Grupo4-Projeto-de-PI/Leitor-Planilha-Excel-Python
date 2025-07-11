@@ -1,11 +1,10 @@
-import requests
 from fastapi import UploadFile
 import pandas as pd
 import io
 from app.dto.transacaoDto import TransacaoDto
 from app.helper.transacaoHelper import postarDados
     
-def extrairDados(arquivo: UploadFile) -> str:
+def extrairDadosGranel(arquivo: UploadFile) -> str:
     try:
         # Lê o conteúdo do arquivo em bytes
         conteudo = arquivo.file.read()
@@ -15,6 +14,7 @@ def extrairDados(arquivo: UploadFile) -> str:
         
         # Lê o arquivo Excel usando pandas
         df = pd.read_excel(arquivo_excel, sheet_name='Compra a Granel  ', skiprows=1, nrows=32)
+        
         # Pegando as 4 primeiras colunas do data frame
         df = df.iloc[1:32, 0:4]
         print(df)
@@ -45,7 +45,7 @@ def extrairDados(arquivo: UploadFile) -> str:
             )
             transacoes.append(dto)
             
-        #Postando a primeira transação como exemplo, mas fazer outro esquema para postar uma de cada vez
+        #Postando a primeira transação como exemplo, mas fazer outro esquema para postar uma de cada vez dentro do banco de dados
         print(transacoes[1])
         postarDados(transacoes[1])
         

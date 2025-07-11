@@ -2,14 +2,20 @@ from fastapi import APIRouter, File, UploadFile
 
 router = APIRouter()
 
-@router.post("/extract/")
-def extract(arquivo: UploadFile = File(...)):
-    from app.service import extrairDados
-    data = extrairDados(arquivo)
+@router.post("/granel/")
+def extrairGranel(arquivo: UploadFile = File(...)):
+    from app.service import extrairDadosGranel
+    data = extrairDadosGranel(arquivo)
     return data
 
-@router.get("/produtos/")
-def get_produtos():
-    from app.service import buscarProdutos
-    produtos = buscarProdutos()
-    return produtos
+# @router.post("/material-separado/")
+# def extrairMaterialSeparado(arquivo: UploadFile = File(...)):
+#     from app.service import extrairDados
+#     data = extrairDados(arquivo)
+#     return data
+
+# @router.post("/saida/")
+# def extrairSaida(arquivo: UploadFile = File(...)):
+#     from app.service import extrairDados
+#     data = extrairDados(arquivo)
+#     return data
