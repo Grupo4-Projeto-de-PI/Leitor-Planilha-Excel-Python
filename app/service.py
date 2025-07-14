@@ -1,9 +1,10 @@
-from fastapi import UploadFile
+from fastapi import UploadFile, status, HTTPException
 import pandas as pd
 import io
+from requests import RequestException
 from app.dto.transacaoDto import TransacaoDto
-from app.helper.transacaoHelper import postarDados
-from app.helper.produtoHelper import obterListaProdutos, buscarIdProdutoPorNome
+from app.client.transacaoClient import postarDados
+from app.client.produtoClient import obterListaProdutos, buscarIdProdutoPorNome
     
 def extrairDadosGranel(arquivo: UploadFile) -> str:
     try:
@@ -53,10 +54,21 @@ def extrairDadosGranel(arquivo: UploadFile) -> str:
                                 data=data.strftime("%Y-%m-%d") if isinstance(data, pd.Timestamp) else str(data)
                             )
                             postarDados(dto)
-                        
             primeiraColuna += 4
             segundaColuna += 4
-            # print("Dados extraídos e postados com sucesso \n Quantidade de dados extraídos da Planilha de Granel: " + str(QtdDadosExtraidos))
-                
+        
+        return {
+            "message": "Dados extraídos com sucesso!",
+            "qtdDadosExtraidos": QtdDadosExtraidos
+        }
+        
+    except RequestException as e:
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail=f"Erro de comunicação com o serviço de transações: {str(e)}"
+        )
     except Exception as e:
-        return f"Erro ao processar arquivo: {str(e)}"
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Erro inesperado ao processar a transação: {str(e)}"
+        )

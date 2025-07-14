@@ -7,8 +7,8 @@ router = APIRouter()
 @router.post("/granel/")
 def extrairGranel(arquivo: UploadFile = File(...)):
     from app.service import extrairDadosGranel
-    data = extrairDadosGranel(arquivo)
-    return data
+    resposta = extrairDadosGranel(arquivo)
+    return resposta
 
 # @router.post("/material-separado/")
 # def extrairMaterialSeparado(arquivo: UploadFile = File(...)):
