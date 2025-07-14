@@ -24,8 +24,10 @@ def extrairDadosGranel(arquivo: UploadFile) -> str:
         
         while primeiraColuna < totalColunas:
             bloco_df = df.iloc[1:32, primeiraColuna:segundaColuna]
-            bloco_df = bloco_df.dropna(how='all').reset_index(drop=True)
-    
+        
+            #Removendo se todos os valores da coluna forem NaN
+            bloco_df = bloco_df.dropna(axis=1, how='all').reset_index(drop=True)
+            
             nomeProduto = bloco_df.columns[0]
             idProduto = buscarIdProdutoPorNome(nomeProduto, listaProdutos)
 
