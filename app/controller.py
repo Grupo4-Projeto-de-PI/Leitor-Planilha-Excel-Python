@@ -1,5 +1,7 @@
 from fastapi import APIRouter, File, UploadFile
 
+import app
+
 router = APIRouter()
 
 @router.post("/granel/")
