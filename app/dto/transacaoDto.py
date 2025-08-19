@@ -7,6 +7,6 @@ class TransacaoDto(BaseModel):
      peso: float
      valorTotal: float
      tipoOperacao: int
-     fkParceiroComercial: int = 0
-     fkUsuario: int = 0
+     fkParceiroComercial: Optional[int] = None
+     fkUsuario: Optional[int] = None
      data: str
