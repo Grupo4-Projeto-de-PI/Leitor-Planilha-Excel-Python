@@ -5,11 +5,41 @@ from requests import RequestException
 from app.dto.transacaoDto import TransacaoDto
 from app.client.transacaoClient import postarDados
 from app.client.produtoClient import obterListaProdutos, buscarIdProdutoPorNome
+import os
+from datetime import datetime
+import tempfile
 
-def extrairDadosPlanilha(arquivo: UploadFile, nomePlanilha: str, coluna2: int, tipoOperacao: int, tipoCategoria: int, nrows: int) -> str:
+def verificar(arquivo: UploadFile):
+    with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+        temp_file.write(arquivo.file.read())
+        temp_path = temp_file.name
+
+    estatisticas = os.stat(temp_path)
+    data_criacao = datetime.fromtimestamp(estatisticas.st_ctime)
+    data_str = data_criacao.strftime('%Y-%m-%d %H:%M:%S')
+
+    arquivo_duplicidade = './arqDuplicidade'
+    if os.path.exists(arquivo_duplicidade):
+        with open(arquivo_duplicidade, 'r') as f:
+            if data_str in f.read():
+                os.remove(temp_path)
+                raise HTTPException(
+                    status_code=status.HTTP_409_CONFLICT,
+                    detail="Arquivo com essa data já foi registrado. Ação bloqueada."
+                )
+
+    with open(arquivo_duplicidade, 'a') as f:
+        f.write(data_str + '\n')
+
+    os.remove(temp_path)
+    print("Arquivo registrado com sucesso.")
+    return True
+
+def extrairDadosPlanilha(arquivo: UploadFile, nomePlanilha: str, coluna2: int, tipoOperacao: int, tipoCategoria: int, nrows: int) -> str:  
     try:
         conteudo = arquivo.file.read()
-        
+        verificar(arquivo)
+    
         # Cria um objeto BytesIO para que o pandas possa ler
         arquivo_excel = io.BytesIO(conteudo)
         
