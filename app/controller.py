@@ -21,3 +21,4 @@ def extrairSaida(arquivo: UploadFile = File(...)):
     from app.service import extrairDadosPlanilha
     data = extrairDadosPlanilha(arquivo, ' Saída', 4, 1, 1, 16)
     return data
+
