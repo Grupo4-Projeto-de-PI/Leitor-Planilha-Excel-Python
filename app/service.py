@@ -75,6 +75,15 @@ def extrairDadosPlanilha(arquivo: UploadFile, nomePlanilha: str, coluna2: int, t
             for index, row in bloco_df.iterrows():
                 data, peso, valor = row.iloc[0], row.iloc[1], row.iloc[2]
                 if pd.notna(peso) and pd.notna(valor) and peso != 0 and valor != 0:
+                    # Formata a data para ISO 8601 com hora
+                    if isinstance(data, pd.Timestamp):
+                        data_formatada = data.strftime("%Y-%m-%dT00:00:00")
+                    else:
+                        # Se for string, tenta converter e formatar
+                        data_formatada = str(data).replace(" ", "T") if "T" not in str(data) else str(data)
+                        if len(data_formatada) == 10:  # Apenas data YYYY-MM-DD
+                            data_formatada += "T00:00:00"
+                    
                     dto = TransacaoDto(
                         fkProduto=idProduto,
                         categoria=tipoCategoria,
@@ -83,7 +92,7 @@ def extrairDadosPlanilha(arquivo: UploadFile, nomePlanilha: str, coluna2: int, t
                         tipoOperacao=tipoOperacao,
                         fkParceiroComercial=None,
                         fkUsuario=None,
-                        data=data.strftime("%Y-%m-%d") if isinstance(data, pd.Timestamp) else str(data)
+                        data=data_formatada
                     )
                     postarDados(dto)
                     QtdDadosExtraidos += 1
